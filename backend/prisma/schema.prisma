@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid()) @map("user_id")
+  name           String    @db.VarChar(255)
+  email          String    @unique @db.VarChar(255)
+  passwordHash   String    @map("password_hash") @db.VarChar(255)
+  userGroup      String    @map("user_group") @db.VarChar(50)
+  financialScore Int       @default(0) @map("financial_score")
+  language       String    @default("en") @db.VarChar(10)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  decisions  Decision[]
+  progress   Progress?
+  userBadges UserBadge[]
+
+  @@index([email])
+  @@index([userGroup])
+  @@map("users")
+}
+
+model Scenario {
+  id               String   @id @default(uuid()) @map("scenario_id")
+  title            String   @db.VarChar(255)
+  context          String   @db.Text
+  difficulty       String   @db.VarChar(20)
+  userGroup        String   @map("user_group") @db.VarChar(50)
+  theme            String   @db.VarChar(100)
+  culturalContext  String?  @map("cultural_context") @db.Text
+  choices          Json
+  visualAssets     Json?    @map("visual_assets")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  decisions Decision[]
+  rules     Rule[]
+
+  @@index([userGroup])
+  @@index([theme])
+  @@index([difficulty])
+  @@map("scenarios")
+}
+
+model Decision {
+  id            String   @id @default(uuid()) @map("decision_id")
+  userId        String   @map("user_id")
+  scenarioId    String   @map("scenario_id")
+  choiceId      String   @map("choice_id") @db.VarChar(100)
+  clientEventId String   @unique @map("client_event_id") @db.VarChar(255)
+  scoreChange   Int      @map("score_change")
+  timeSpent     Int?     @map("time_spent")
+  timestamp     DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  scenario Scenario @relation(fields: [scenarioId], references: [id])
+
+  @@index([userId])
+  @@index([scenarioId])
+  @@index([clientEventId])
+  @@index([timestamp])
+  @@map("decisions")
+}
+
+model Progress {
+  id                  String   @id @default(uuid()) @map("progress_id")
+  userId              String   @unique @map("user_id")
+  completedScenarios  Json     @default("[]") @map("completed_scenarios")
+  scoreHistory        Json     @default("[]") @map("score_history")
+  badges              Json     @default("[]")
+  themeProgress       Json     @default("{}") @map("theme_progress")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("progress")
+}
+
+model Rule {
+  id         String   @id @default(uuid()) @map("rule_id")
+  scenarioId String   @map("scenario_id")
+  choiceId   String   @map("choice_id") @db.VarChar(100)
+  scoreChange Int     @map("score_change")
+  feedback   String   @db.Text
+  category   String?  @db.VarChar(100)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  scenario Scenario @relation(fields: [scenarioId], references: [id])
+
+  @@index([scenarioId])
+  @@map("rules")
+}
+
+model Badge {
+  id          String   @id @default(uuid()) @map("badge_id")
+  name        String   @db.VarChar(255)
+  description String   @db.Text
+  icon        String?  @db.VarChar(255)
+  criteria    Json
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  userBadges UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  userId   String   @map("user_id")
+  badgeId  String   @map("badge_id")
+  earnedAt DateTime @default(now()) @map("earned_at")
+
+  user  User  @relation(fields: [userId], references: [id])
+  badge Badge @relation(fields: [badgeId], references: [id])
+
+  @@id([userId, badgeId])
+  @@index([userId])
+  @@map("user_badges")
+}

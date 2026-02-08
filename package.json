@@ -1,0 +1,31 @@
+{
+  "name": "financial-literacy-platform",
+  "version": "1.0.0",
+  "description": "Financial Literacy Platform for Bharat - Offline-first gamified learning",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "init-db": "cd backend && npm run init-db",
+    "verify": "cd backend && npm run verify",
+    "setup": "cd backend && npx prisma generate && npx prisma migrate dev --name init && npx prisma db seed",
+    "dev": "concurrently --kill-others-on-fail --prefix \"[{name}]\" --names \"BACKEND,FRONTEND\" --prefix-colors \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start": "npm run dev",
+    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "clean": "rimraf backend/node_modules backend/dist backend/prisma/dev.db frontend/node_modules frontend/.next"
+  },
+  "keywords": [
+    "financial-literacy",
+    "education",
+    "gamification",
+    "offline-first",
+    "pwa",
+    "india"
+  ],
+  "author": "Innovate4FinLit Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  }
+}
