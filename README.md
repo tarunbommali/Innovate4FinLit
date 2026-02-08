@@ -2,8 +2,9 @@
 
 > A scalable, offline-first gamified financial literacy platform that simulates real-world financial decisions using modular backend services and behavior-driven learning to enable practical financial empowerment across diverse Indian user groups.
 
-[![Hackathon](https://img.shields.io/badge/Hackathon-Innovate4FinLin-blue)]()
+[![Hackathon](https://img.shields.io/badge/Hackathon-Innovate4FinLit-blue)]()
 [![Phase](https://img.shields.io/badge/Phase-1%20Prototype-green)]()
+[![Status](https://img.shields.io/badge/Status-Complete-success)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
 ---
@@ -26,6 +27,42 @@
 - [Testing Strategy](#-testing-strategy)
 - [Deployment](#-deployment)
 - [Roadmap](#-roadmap)
+
+---
+
+## 🎯 Phase 1 Prototype Scope
+
+This is a **Phase 1 hackathon prototype** demonstrating core functionality and architecture. 
+
+### ✅ What's Implemented (Phase 1)
+- **Authentication & User Management** - Complete with JWT and bcrypt
+- **7 Realistic Scenarios** - Across 3 themes (Savings, Budgeting, Fraud Prevention)
+- **Decision-Based Learning** - No quizzes, only realistic choices with consequences
+- **Gamification System** - Financial score, 6 badges, visual feedback
+- **Progress Tracking** - Dashboard, score history, completed scenarios
+- **Offline-Ready Architecture** - IndexedDB, PWA configuration, decision queuing
+- **Indian Cultural Context** - ₹ currency, festivals, UPI, cultural references
+- **Modern Tech Stack** - Next.js 14+, TypeScript, Prisma, Tailwind CSS
+- **Comprehensive Documentation** - 9 detailed guides
+
+### 🔮 Planned for Phase 2
+- **Full Service Worker** - Complete offline functionality with background sync
+- **ML Recommendations** - Personalized scenario suggestions based on behavior
+- **Extended Scenarios** - 45+ scenarios (15 per theme)
+- **Multilingual Support** - Hindi, Tamil, Telugu, Bengali translations
+- **Young Adult Content** - Scenarios for 18-25 age group
+- **Testing Suite** - Property-based and unit tests
+- **Production Deployment** - AWS with auto-scaling
+- **Advanced Analytics** - User behavior tracking and insights
+
+### 🏗️ Architecture Highlights
+The platform is built with **production-ready architecture**:
+- Modular backend services (Auth, User, Scenario, Decision, Rules)
+- RESTful API with versioning and idempotent operations
+- Type-safe TypeScript throughout
+- Scalable database schema
+- Offline-first design patterns
+- Clean separation of concerns
 
 ---
 
@@ -613,50 +650,68 @@ Innovate4FinLin/
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 🎯 Demo Account (For Quick Testing)
 
-- Node.js 18+
-- PostgreSQL 15+
-- Docker & Docker Compose (optional)
+**Don't want to register? Use this test account:**
+- **Email:** demo@example.com
+- **Password:** demo123
+- **User Group:** Student
+- **Progress:** Pre-loaded with 2 completed scenarios
 
-### Installation
+### ⚡ Quick Start (Recommended)
+
+**One command to start everything:**
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd Innovate4FinLin
+# First time setup
+npm install
+npm run install:all
+npm run setup
 
-# Backend setup
+# Start both servers
+npm run dev
+```
+
+Open **http://localhost:3000** and you're ready! 🎉
+
+### Quick Start for Judges & Evaluators
+
+**Want to test the application quickly?** See [QUICKSTART.md](QUICKSTART.md) for a 5-minute setup guide.
+
+### Detailed Setup Instructions
+
+For complete setup instructions, see [SETUP.md](SETUP.md).
+
+### Quick Docker Setup (Recommended)
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Initialize database (wait 30 seconds after starting)
+docker exec -it finlit-backend npx prisma migrate deploy
+docker exec -it finlit-backend npx prisma db seed
+
+# Open http://localhost:3000
+```
+
+### Manual Setup
+
+```bash
+# Backend
 cd backend
 npm install
-cp .env.example .env    # Configure database URL, JWT secret
-npx prisma migrate dev  # Run database migrations
-npx prisma db seed      # Seed sample scenarios
-
-# Start backend
+cp .env.example .env
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed
 npm run dev
 
-# Frontend setup (in a new terminal)
+# Frontend (new terminal)
 cd frontend
 npm install
+echo "NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1" > .env.local
 npm run dev
-```
-
-### Environment Variables
-
-```env
-# Backend .env
-DATABASE_URL=postgresql://user:password@localhost:5432/finlit
-JWT_SECRET=your-secure-secret-key
-JWT_EXPIRY=24h
-PORT=3001
-NODE_ENV=development
-```
-
-### Docker Setup
-
-```bash
-docker-compose up -d
 ```
 
 ---
@@ -787,10 +842,13 @@ npm test
 
 ---
 
-## 📄 Specs & Documentation
+## 📄 Documentation
 
 | Document | Description |
 |----------|-------------|
+| [QUICKSTART.md](QUICKSTART.md) | 5-minute setup guide for judges and evaluators |
+| [SETUP.md](SETUP.md) | Detailed setup instructions and troubleshooting |
+| [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) | Complete implementation details and metrics |
 | [specs/requirements.md](specs/requirements.md) | Functional & non-functional requirements with acceptance criteria |
 | [specs/design.md](specs/design.md) | Technical architecture, component interfaces, database schema |
 | [specs/tasks.md](specs/tasks.md) | Implementation plan with 27 task groups and requirement traceability |
